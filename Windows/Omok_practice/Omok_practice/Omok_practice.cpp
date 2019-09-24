@@ -212,13 +212,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case ID_BUTTON_RETURN:
-			gameManager.clearDataOnce(gameManager.getLastDataInStack());
-			
-			if (!gameManager.isStackEmpty())
-			{
+			try {
+				gameManager.clearDataOnce(gameManager.getLastDataInStack());
 				gameManager.removeLastDataInStack();
 			}
-			else
+			catch (int zero)
 			{
 				MessageBox(hWnd, "THERE IS NO STONE ANYMORE", "Message", MB_OK);
 			}
