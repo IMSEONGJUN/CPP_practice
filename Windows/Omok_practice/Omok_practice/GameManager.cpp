@@ -36,9 +36,7 @@ int GameManager::getLastDataInStack()
 	{
 		return m_dataInStack.top();
 	}
-
-    //리턴0이 0을 보내는건지 함수 종료인지? 0을 보내려는 의도로 쓴것
-	return 0; 
+	else throw 0;
 }
 
 bool GameManager::isStackEmpty()
