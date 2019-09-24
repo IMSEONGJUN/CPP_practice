@@ -111,8 +111,15 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
+    const int screenWidth = GetSystemMetrics( SM_CXSCREEN );
+    const int screenHeight = GetSystemMetrics( SM_CYSCREEN );
+    const int windowWidth = 1280;
+    const int windowHeight = 850;
+
 	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+		screenWidth / 2 - (windowWidth / 2), 
+        screenHeight / 2 - (windowHeight / 2), 
+        windowWidth, windowHeight, NULL, NULL, hInstance, NULL);
 
 	if (!hWnd)
 	{
