@@ -1,12 +1,13 @@
 // Omok.cpp : 응용 프로그램에 대한 진입점을 정의합니다.
 //
-
 #include "stdafx.h"
 #include "Omok_practice.h"
 #include <list>
 #include "GameManager.h"
 #include <commdlg.h>
 #include "WriteAndRead.h"
+
+#pragma warning(disable:4996)
 
 #define MAX_LOADSTRING 100
 
@@ -15,12 +16,19 @@ HINSTANCE hInst;								// 현재 인스턴스입니다.
 TCHAR szTitle[MAX_LOADSTRING];					// 제목 표시줄 텍스트입니다.
 TCHAR szWindowClass[MAX_LOADSTRING];			// 기본 창 클래스 이름입니다.
 
+SOCKET g_connectSocket;
+
+#define WM_SOCKET       WM_USER + 100
+
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+
+void initializeWinSock( HWND hWnd );
+void connectToServer( HWND hWnd );
 
 GameManager gameManager;
 
@@ -126,10 +134,35 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
+    initializeWinSock( hWnd );
+
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
 	return TRUE;
+}
+
+void initializeWinSock( HWND hWnd )
+{
+    WSADATA wsaData;
+    if( WSAStartup( MAKEWORD( 2, 2 ), &wsaData ) != 0 )
+        return;
+}
+
+void connectToServer( HWND hWnd )
+{
+    g_connectSocket = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
+
+    WSAAsyncSelect( g_connectSocket, hWnd, WM_SOCKET, FD_CONNECT | FD_CLOSE | FD_READ | FD_WRITE );
+
+    SOCKADDR_IN sockAddrIn;
+    ZeroMemory( &sockAddrIn, sizeof( sockAddrIn ) );
+
+    sockAddrIn.sin_family = AF_INET;
+    sockAddrIn.sin_port = htons( 5000 );
+    sockAddrIn.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    connect( g_connectSocket, (sockaddr *)&sockAddrIn, sizeof( sockAddrIn ) );
 }
 
 //
@@ -216,13 +249,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				gameManager.clearDataOnce(gameManager.getLastDataInStack());
 				gameManager.removeLastDataInStack();
 			}
-			catch (int zero)
+			catch (int)
 			{
 				MessageBox(hWnd, "THERE IS NO STONE ANYMORE", "Message", MB_OK);
 			}
 
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
+        case ID_BUTTON_CONNECT:
+            connectToServer( hWnd );
+            break;
+
 		case ID_FILE_SAVE:
 			saveFile(hWnd);
 			break;

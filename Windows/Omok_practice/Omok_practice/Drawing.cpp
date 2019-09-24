@@ -23,6 +23,11 @@ void Drawing::initializeButton(HWND hWnd, HINSTANCE hInst)
 		WS_CHILD | WS_VISIBLE,
 		800, 50, 90, 30, hWnd,
 		(HMENU)ID_BUTTON_RETURN, hInst, NULL);
+
+    m_hwndConnect = CreateWindow( "BUTTON", "CONNECT",
+                                 WS_CHILD | WS_VISIBLE,
+                                 800, 150, 100, 30, hWnd,
+                                 (HMENU)ID_BUTTON_CONNECT, hInst, NULL );
 }
 
 void Drawing::drawStone2(HDC hdc, int x, int y, int color, int xInterval, int yInterval)
