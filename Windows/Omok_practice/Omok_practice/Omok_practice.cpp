@@ -4,6 +4,7 @@
 #include "Omok_practice.h"
 #include <list>
 #include "GameManager.h"
+#include "NetworkManager.h"
 #include <commdlg.h>
 #include "WriteAndRead.h"
 
@@ -16,10 +17,6 @@ HINSTANCE hInst;								// 현재 인스턴스입니다.
 TCHAR szTitle[MAX_LOADSTRING];					// 제목 표시줄 텍스트입니다.
 TCHAR szWindowClass[MAX_LOADSTRING];			// 기본 창 클래스 이름입니다.
 
-SOCKET g_connectSocket;
-
-#define WM_SOCKET       WM_USER + 100
-
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -27,10 +24,8 @@ BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
-void initializeWinSock( HWND hWnd );
-void connectToServer( HWND hWnd );
-
 GameManager gameManager;
+NetworkManager networkManager;
 
 WriteAndRead g_writeAndRead;
 
@@ -134,35 +129,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
-    initializeWinSock( hWnd );
+    networkManager.initialize( hWnd );
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
 	return TRUE;
-}
-
-void initializeWinSock( HWND hWnd )
-{
-    WSADATA wsaData;
-    if( WSAStartup( MAKEWORD( 2, 2 ), &wsaData ) != 0 )
-        return;
-}
-
-void connectToServer( HWND hWnd )
-{
-    g_connectSocket = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
-
-    WSAAsyncSelect( g_connectSocket, hWnd, WM_SOCKET, FD_CONNECT | FD_CLOSE | FD_READ | FD_WRITE );
-
-    SOCKADDR_IN sockAddrIn;
-    ZeroMemory( &sockAddrIn, sizeof( sockAddrIn ) );
-
-    sockAddrIn.sin_family = AF_INET;
-    sockAddrIn.sin_port = htons( 5000 );
-    sockAddrIn.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    connect( g_connectSocket, (sockaddr *)&sockAddrIn, sizeof( sockAddrIn ) );
 }
 
 //
@@ -193,6 +165,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 		// case WM_DESTROY:
 		//해당 HWND를 가진 윈도우가 종료될때 튄다.
+
+    case WM_SOCKET:
+        networkManager.onSocketMessage( wParam, lParam );
+        break;
+
 	case WM_LBUTTONDOWN:
 	
 
@@ -257,7 +234,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;
         case ID_BUTTON_CONNECT:
-            connectToServer( hWnd );
+            networkManager.connectToServer( "127.0.0.1", 5000 );
             break;
 
 		case ID_FILE_SAVE:

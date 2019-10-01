@@ -35,6 +35,9 @@
     <ClInclude Include="WriteAndRead.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkManager.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -50,6 +53,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="WriteAndRead.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

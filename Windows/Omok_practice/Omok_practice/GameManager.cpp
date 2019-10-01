@@ -4,8 +4,6 @@
 
 GameManager::GameManager()
 {
-    Packet packet;
-    packet.doSome();
 
 }
 

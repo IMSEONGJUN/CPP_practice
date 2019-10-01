@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClInclude Include="Drawing.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="Omok_practice.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -94,6 +95,7 @@
   <ItemGroup>
     <ClCompile Include="Drawing.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="Omok_practice.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
