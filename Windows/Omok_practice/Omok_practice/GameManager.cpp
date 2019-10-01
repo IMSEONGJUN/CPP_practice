@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "GameManager.h"
-
+#include <Packet.h>
 
 GameManager::GameManager()
 {
+    Packet packet;
+    packet.doSome();
+
 }
 
 
