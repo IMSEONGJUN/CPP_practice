@@ -7,6 +7,7 @@
 #include "NetworkManager.h"
 #include <commdlg.h>
 #include "WriteAndRead.h"
+#include <Logger.h>
 
 #pragma warning(disable:4996)
 
@@ -129,7 +130,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
-    networkManager.initialize( hWnd );
+    networkManager.initialize( hWnd, &gameManager );
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
@@ -153,7 +154,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 	int x, y;
-	static int colorCount = 0;
+
+    //static int colorCount;
 	
 	switch (message)
 	{
@@ -179,7 +181,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		Stone stone;
 		stone.x = x;
 		stone.y = y;
-		stone.color = (colorCount % 2) + 1;
+        stone.color = networkManager.getInitStoneColor();
 
 		
 		gameManager.transToIndexValue(stone);
@@ -190,13 +192,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 
+        if( networkManager.isMyTurn() )
+        {
+            networkManager.sendStoneIndex( stone.x, stone.y, stone.color );
+           
+            networkManager.setMyTurn(false);
+        }
+        
+
+        ////////////
+        break;
+
 		gameManager.setStoneInMemory(stone);
 		
 		InvalidateRect(hWnd, NULL, TRUE);
 
 		gameManager.insertDataInStack(stone);
 
-		colorCount++;
+		//colorCount++;
 
 		if (gameManager.checkWin(stone))
 		{
@@ -235,6 +248,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
         case ID_BUTTON_CONNECT:
             networkManager.connectToServer( "127.0.0.1", 5000 );
+            break;
+
+        case ID_BUTTON_DISCONNECT:
+            networkManager.disconnect();
             break;
 
 		case ID_FILE_SAVE:

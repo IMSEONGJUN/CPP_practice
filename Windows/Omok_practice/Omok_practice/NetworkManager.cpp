@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "NetworkManager.h"
-
+#include "Packet.h"
+#include "Logger.h"
+#include "GameManager.h"
 
 #pragma warning(disable:4996)
 
@@ -14,15 +16,31 @@ NetworkManager::~NetworkManager()
 {
 }
 
-bool NetworkManager::initialize( HWND hWnd )
+bool NetworkManager::initialize( HWND hWnd, GameManager* gameManager )
 {
     WSADATA wsaData;
     if( WSAStartup( MAKEWORD( 2, 2 ), &wsaData ) != 0 )
         return false;
 
     m_hWnd = hWnd;
+    m_gameManagerRef = gameManager;
 
     return true;
+}
+
+void NetworkManager::setMyTurn(bool myTurn)
+{
+    m_myTurn = myTurn; 
+}
+
+bool NetworkManager::isMyTurn() const
+{
+    return m_myTurn;
+}
+
+int NetworkManager::getInitStoneColor() const
+{
+    return m_initStoneColor;
 }
 
 void NetworkManager::connectToServer( const std::string& ip, int port )
@@ -41,6 +59,23 @@ void NetworkManager::connectToServer( const std::string& ip, int port )
     connect( m_socket, (sockaddr *)&sockAddrIn, sizeof( sockAddrIn ) );
 }
 
+void NetworkManager::disconnect()
+{
+    closesocket( m_socket );
+}
+
+void NetworkManager::sendStoneIndex( int x, int y, int color )
+{
+    Logger::debug( "sendStoneIndex: %d, %d, %d", x, y, color );
+
+    Packet packet( PacketTypePut );
+    packet.write( &x, sizeof( x ) );
+    packet.write( &y, sizeof( y ) );
+    packet.write( &color, sizeof( color ) );
+
+    Packet::send( m_socket, packet );
+}
+
 void NetworkManager::onSocketMessage( WPARAM wParam, LPARAM lParam )
 {
     SOCKET socket = (SOCKET)wParam;
@@ -53,9 +88,64 @@ void NetworkManager::onSocketMessage( WPARAM wParam, LPARAM lParam )
     case FD_CLOSE:
         MessageBox( m_hWnd, "Disconnected!!", "Network", MB_OK );
         break;
-
+    case FD_READ:
+        onPacketRead( socket );
+        break;
 
     default:
         break;
+    }
+}
+
+void NetworkManager::onPacketRead( SOCKET socket )
+{
+    char buf[256] = { 0, };
+    int received = recv( socket, buf, 256, 0 );
+
+    Packet packet( buf, received );
+    PacketType type = packet.getType();
+
+    Logger::debug("Packet Received:%d, size:%d", type, received );
+
+    if( type == PacketTypeStart )
+    {
+        int color;
+        packet.read(&color, sizeof(color));
+        setMyTurn(color == m_initStoneColor);    
+    }
+    else if( type == PacketTypeStoneColor )
+    {
+        int temp;
+        packet.read(&temp, sizeof(temp));
+        m_initStoneColor = temp;
+    }
+    else if( type == PacketTypePut )
+    { 
+        Stone stone;
+        packet.read( &stone.x, sizeof( stone.x ) );
+        packet.read( &stone.y, sizeof( stone.y ) );
+        packet.read( &stone.color, sizeof( stone.color ) );
+
+        if( stone.color != m_initStoneColor )
+        {
+            setMyTurn(true);
+        }
+    
+        m_gameManagerRef->setStoneInMemory( stone );
+        InvalidateRect( m_hWnd, NULL, TRUE );
+
+        Logger::debug( "onPacketRead: %d, %d, %d", stone.x, stone.y, stone.color );
+    }
+    else if( type == PacketTypeJudgement )
+    {
+        int winColor;
+        packet.read(&winColor, sizeof(winColor));
+
+        Logger::debug( "Judgement -> %d", winColor);
+
+        if( winColor == m_initStoneColor )
+            MessageBox( m_hWnd, "You Win", "Message", MB_OK );
+        else 
+            MessageBox( m_hWnd, "You Lose", "Message", MB_OK );
     }
 }

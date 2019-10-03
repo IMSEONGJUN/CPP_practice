@@ -3,7 +3,8 @@
 
 #include "stdafx.h"
 #include "Omok_server.h"
-#include <WinSock2.h>
+#include "ServerManager.h"
+#include "Logger.h"
 
 #pragma warning(disable:4996)
 
@@ -13,11 +14,12 @@
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
-SOCKET g_listenSocket;
+
+ServerManager g_serverManager;
+
 SOCKET g_clientSocket[2];
 int g_clientCount = 0;
 
-#define WM_SOCKET       WM_USER + 100
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -117,32 +119,29 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
-   initializeWinsock( hWnd );
+   CreateWindow( "BUTTON", "LISTEN",
+                WS_CHILD | WS_VISIBLE,
+                100, 100, 90, 30, hWnd,
+                (HMENU)ID_BUTTON_LISTEN, hInst, NULL );
 
+   CreateWindow( "BUTTON", "PRINT CONNECTED COUNT",
+                 WS_CHILD | WS_VISIBLE,
+                 100, 160, 200, 30, hWnd,
+                 (HMENU)ID_BUTTON_VIEW_CONNECTED_COUNT, hInst, NULL );
+
+   CreateWindow( "BUTTON", "START",
+                 WS_CHILD | WS_VISIBLE,
+                 220, 100, 90, 30, hWnd,
+                 (HMENU)ID_BUTTON_START, hInst, NULL );
+
+   g_serverManager.initialize( hWnd );
+   
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
    return TRUE;
 }
 
-void initializeWinsock( HWND hWnd )
-{
-    WSADATA wsaData;
-    if( WSAStartup( MAKEWORD( 2, 2 ), &wsaData ) != 0 )
-        return;
-
-    g_listenSocket = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
-    WSAAsyncSelect( g_listenSocket, hWnd, WM_SOCKET, FD_ACCEPT | FD_CLOSE );
-
-    SOCKADDR_IN sockAddrIn;
-    ZeroMemory( &sockAddrIn, sizeof( sockAddrIn ) );
-    sockAddrIn.sin_family = AF_INET;
-    sockAddrIn.sin_port = htons( 5000 );
-    sockAddrIn.sin_addr.S_un.S_addr = INADDR_ANY;
-    bind( g_listenSocket, (sockaddr *)&sockAddrIn, sizeof( sockAddrIn ) );
-
-    listen( g_listenSocket, SOMAXCONN );
-}
 
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
@@ -164,26 +163,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
     case WM_SOCKET:
     {
-        SOCKET socket = (SOCKET)wParam;
-        switch( lParam )
-        {
-            case FD_ACCEPT:
-            {
-                SOCKADDR addr;
-                int lenAddr = sizeof( addr );
-                g_clientSocket[g_clientCount++] = accept( socket, (SOCKADDR *)&addr, &lenAddr );
-
-                int retval = WSAAsyncSelect( g_clientSocket[g_clientCount++], hWnd,
-                                             WM_SOCKET, FD_READ | FD_WRITE | FD_CLOSE );
-
-            }
-            break;
-            case FD_READ:
-            {
-            
-            }
-            break;
-        }
+        g_serverManager.onSocketMessage( wParam, lParam );
     }
         break;
   
@@ -200,6 +180,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;
+        case ID_BUTTON_LISTEN:
+            g_serverManager.listen( 5000 );
+            break;
+
+        case ID_BUTTON_VIEW_CONNECTED_COUNT:
+            Logger::debug( "Current Connected Count: %d", g_serverManager.getConnectedClientCount() );
+            break;
+
+        case ID_BUTTON_START:
+            g_serverManager.startGame();
+            break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}

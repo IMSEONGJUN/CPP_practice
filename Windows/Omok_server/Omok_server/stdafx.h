@@ -19,3 +19,17 @@
 
 
 // TODO: reference additional headers your program requires here
+#include <WinSock2.h>
+
+#define WM_SOCKET           WM_USER + 100
+
+#define ID_BUTTON_LISTEN    1001
+#define ID_BUTTON_VIEW_CONNECTED_COUNT    1002
+#define ID_BUTTON_START     1003
+
+struct Stone
+{
+    int x;
+    int y;
+    int color;
+};

@@ -41,9 +41,11 @@ void Packet::read( void* data, int size )
 {
     size_t pos = m_readPosition + DefaultHeaderSize;
     memcpy( data, m_buffer.data() + pos, size );
+
+    m_readPosition += size;
 }
 
-char* Packet::getBuffer()
+const char* Packet::getBuffer() const
 {
     return m_buffer.data();
 }
@@ -64,4 +66,9 @@ PacketType Packet::getType() const
 size_t Packet::getBodySize() const
 {
     return m_writePosition;
+}
+
+void Packet::send( SOCKET socket, const Packet& packet )
+{
+    ::send( socket, packet.getBuffer(), packet.getPacketSize(), 0 );
 }

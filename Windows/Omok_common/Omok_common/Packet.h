@@ -1,13 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <WinSock2.h>
 
 enum PacketType
 {
-    Conversation = 0,
-    SystemMessage,
-    NickNameSetting,
-    GenderSetting,
+    PacketTypePut = 1,
+    PacketTypeJudgement,
+    PacketTypeStoneColor,
+    PacketTypeStart,
 };
 
 class Packet
@@ -18,13 +19,15 @@ public:
     virtual ~Packet();
 
     void write( const void* data, size_t size );
-    char* getBuffer();
+    const char* getBuffer() const;
     int getPacketSize() const;
 
     void read( void* data, int size );
 
     PacketType getType() const;
     size_t getBodySize() const;
+
+    static void send( SOCKET socket, const Packet& packet );
 
 private:
     std::vector<char> m_buffer;
