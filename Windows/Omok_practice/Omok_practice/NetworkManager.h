@@ -20,11 +20,11 @@ public:
 
 	void onSocketMessage(WPARAM wParam, LPARAM lParam);
 	void onPacketRead(SOCKET socket);
-
+	void sendPacketTypeDelete();
 	int getInitStoneColor() const;
 
 private:
-
+	void onDeleteMsgRecv(Packet packet);
 	void onStartMsgRecv(Packet packet);
 	void setStoneColor(Packet packet);
 	void whenTypeIsPut(Packet packet);

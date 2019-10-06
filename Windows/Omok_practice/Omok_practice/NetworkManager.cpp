@@ -123,6 +123,10 @@ void NetworkManager::onPacketRead(SOCKET socket)
 	{
 		onJudgementMsgRecv(packet);
 	}
+	else if (type == PacketTypeDeleteIndex)
+	{
+		onDeleteMsgRecv(packet);
+	}
 }
 
 void NetworkManager::onStartMsgRecv(Packet packet)
@@ -169,3 +173,23 @@ void NetworkManager::onJudgementMsgRecv(Packet packet)
 	else
 		MessageBox(m_hWnd, "You Lose", "Message", MB_OK);
 }
+
+void NetworkManager::sendPacketTypeDelete()
+{
+	Packet packet(PacketTypeDeleteColor);
+	packet.write(&m_initStoneColor, sizeof(m_initStoneColor));
+	Packet::send(m_socket, packet);
+}
+
+void NetworkManager::onDeleteMsgRecv(Packet packet)
+{
+	int deleteIndex;
+	packet.read(&deleteIndex, sizeof(deleteIndex));
+	Stone* temp = m_gameManagerRef->getGridFromMemory();
+	temp[deleteIndex].x = 0;
+	temp[deleteIndex].y = 0;
+	temp[deleteIndex].color = 0;
+
+	InvalidateRect(m_hWnd, NULL, TRUE);
+}
+

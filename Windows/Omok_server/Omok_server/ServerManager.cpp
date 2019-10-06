@@ -111,20 +111,15 @@ void ServerManager::onPacketRead(SOCKET clientSocket)
 
 	Packet packet(buf, received);
 
-	Stone stone;
-	packet.read(&stone.x, sizeof(stone.x));
-	packet.read(&stone.y, sizeof(stone.y));
-	packet.read(&stone.color, sizeof(stone.color));
+	PacketType type = packet.getType();
 
-	m_gameManager.setStoneInMemory(stone);
-
-	Logger::debug("onPacketRead: Put: x:%d, y:%d, color:%d", stone.x, stone.y, stone.color);
-
-	broadcastPacket(packet);
-
-	if (m_gameManager.checkWin(stone))
+	if (type == PacketTypePut)
 	{
-		sendingWinStoneColor(stone);
+		putStoneInMemAndSendtoClient(packet);
+	}
+	else if (type == PacketTypeDeleteColor)
+	{
+		checkDeleteStoneColorAndDelete(packet);
 	}
 }
 
@@ -152,4 +147,46 @@ void ServerManager::sendingWinStoneColor(Stone stone) const
 	broadcastPacket(p);
 
 	Logger::debug("check win -> %d, broadcasted", color);
+}
+
+void ServerManager::putStoneInMemAndSendtoClient(Packet packet)
+{
+	Stone stone;
+	packet.read(&stone.x, sizeof(stone.x));
+	packet.read(&stone.y, sizeof(stone.y));
+	packet.read(&stone.color, sizeof(stone.color));
+
+	m_gameManager.setStoneInMemory(stone);
+	m_gameManager.insertDataInStack(stone);
+
+	Logger::debug("onPacketRead: Put: x:%d, y:%d, color:%d", stone.x, stone.y, stone.color);
+
+	broadcastPacket(packet);
+
+	if (m_gameManager.checkWin(stone))
+	{
+		sendingWinStoneColor(stone);
+	}
+}
+
+void ServerManager::checkDeleteStoneColorAndDelete(Packet packet)
+{
+	int deleteColor;
+	packet.read(&deleteColor, sizeof(deleteColor));
+	
+	int deleteIndex = m_gameManager.getLastDataInStack();
+	
+	Stone* temp = m_gameManager.getGridInMemory();
+	if (temp[deleteIndex].color == deleteColor)
+	{
+		temp[deleteIndex].x = 0;
+		temp[deleteIndex].y = 0;
+		temp[deleteIndex].color = 0;
+
+		m_gameManager.removeTopDataInStackOnce();
+		Packet packetDeleteIndex(PacketTypeDeleteIndex);
+		packetDeleteIndex.write(&deleteIndex, sizeof(deleteIndex));
+		broadcastPacket(packetDeleteIndex);
+	}
+	else return;
 }

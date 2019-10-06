@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stack>
+
 class GameManager
 {
 public:
@@ -10,6 +12,13 @@ public:
 	void setStoneInMemory(const Stone &indexStone);
 	bool checkWin(const Stone &indexStone);
 
+	void insertDataInStack(const Stone& stone);
+	int getLastDataInStack();
+	void removeTopDataInStackOnce();
+	void deleteOneStoneInMemory(int index);
+	bool isStackEmpty();
+
+	Stone* getGridInMemory() const;
 	int getXcount() const;
 	int getYcount() const;
 	int getXinterval() const;
@@ -29,6 +38,8 @@ private:
 
 private:
 	Stone *m_GridInMemory;
+
+	std::stack<int> m_stackData;
 
 	int m_xCount;
 	int m_yCount;

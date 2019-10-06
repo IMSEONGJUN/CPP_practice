@@ -235,14 +235,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case ID_BUTTON_RETURN:
-			try {
-				gameManager.clearDataOnce(gameManager.getLastDataInStack());
-				gameManager.removeLastDataInStack();
-			}
-			catch (int)
-			{
-				MessageBox(hWnd, "THERE IS NO STONE ANYMORE", "Message", MB_OK);
-			}
+			networkManager.sendPacketTypeDelete();
+			//try {
+			//	gameManager.clearDataOnce(gameManager.getLastDataInStack());
+			//	gameManager.removeLastDataInStack();
+			//}
+			//catch (int)
+			//{
+			//	MessageBox(hWnd, "THERE IS NO STONE ANYMORE", "Message", MB_OK);
+			//}
 
 			InvalidateRect(hWnd, NULL, TRUE);
 			break;

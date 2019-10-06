@@ -229,6 +229,40 @@ bool GameManager::checkWin(const Stone &indexStone)
 
 }
 
+Stone* GameManager::getGridInMemory() const
+{
+	return m_GridInMemory;
+}
+
+void GameManager::insertDataInStack(const Stone& stone)
+{
+	int index = stone.y * getXcount() + stone.x;
+	m_stackData.push(index);
+}
+
+int GameManager::getLastDataInStack()
+{
+	return m_stackData.top();
+}
+
+void GameManager::removeTopDataInStackOnce()
+{
+	m_stackData.pop();
+}
+
+void GameManager::deleteOneStoneInMemory(int index)
+{
+	m_GridInMemory[index].x = 0;
+	m_GridInMemory[index].y = 0;
+	m_GridInMemory[index].color = 0;
+}
+
+bool GameManager::isStackEmpty()
+{
+	return m_stackData.empty();
+}
+
+
 int GameManager::getXcount() const
 {
 	return m_xCount;

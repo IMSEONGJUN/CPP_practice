@@ -9,6 +9,8 @@ enum PacketType
     PacketTypeJudgement,
     PacketTypeStoneColor,
     PacketTypeStart,
+	PacketTypeDeleteColor,
+	PacketTypeDeleteIndex,
 };
 
 class Packet
