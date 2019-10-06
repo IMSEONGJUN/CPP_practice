@@ -24,40 +24,40 @@ void GameManager::initialize(int xCount, int yCount, int xInterval, int yInterva
 	m_GridInMemory = new Stone[xCount * yCount];
 }
 
-void GameManager::insertDataInStack(const Stone &indexStone)
-{
-	int index = indexStone.y * m_xCount + indexStone.x;
-
-	m_dataInStack.push(index);
-}
-
-int GameManager::getLastDataInStack()
-{
-	if (!m_dataInStack.empty())
-	{
-		return m_dataInStack.top();
-	}
-	else throw 0;
-}
-
-bool GameManager::isStackEmpty()
-{
-
-
-	return m_dataInStack.empty();
-}
-
-void GameManager::removeLastDataInStack()
-{
-	m_dataInStack.pop();
-}
-
-void GameManager::clearDataOnce(int indexValue)
-{
-	m_GridInMemory[indexValue].x = 0;
-	m_GridInMemory[indexValue].y = 0;
-	m_GridInMemory[indexValue].color = 0;
-}
+//void GameManager::insertDataInStack(const Stone &indexStone)
+//{
+//	int index = indexStone.y * m_xCount + indexStone.x;
+//
+//	m_dataInStack.push(index);
+//}
+//
+//int GameManager::getLastDataInStack()
+//{
+//	if (!m_dataInStack.empty())
+//	{
+//		return m_dataInStack.top();
+//	}
+//	else throw 0;
+//}
+//
+//bool GameManager::isStackEmpty()
+//{
+//
+//
+//	return m_dataInStack.empty();
+//}
+//
+//void GameManager::removeLastDataInStack()
+//{
+//	m_dataInStack.pop();
+//}
+//
+//void GameManager::clearDataOnce(int indexValue)
+//{
+//	m_GridInMemory[indexValue].x = 0;
+//	m_GridInMemory[indexValue].y = 0;
+//	m_GridInMemory[indexValue].color = 0;
+//}
 
 int GameManager::getXcount() const
 {

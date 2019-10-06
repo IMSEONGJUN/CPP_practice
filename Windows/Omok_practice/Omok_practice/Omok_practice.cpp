@@ -199,30 +199,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             networkManager.setMyTurn(false);
         }
         
-
+		break;
         ////////////
-        break;
+        
 
-		gameManager.setStoneInMemory(stone);
+		//gameManager.setStoneInMemory(stone);
 		
-		InvalidateRect(hWnd, NULL, TRUE);
+		//InvalidateRect(hWnd, NULL, TRUE);
 
-		gameManager.insertDataInStack(stone);
+		//gameManager.insertDataInStack(stone);
 
 		//colorCount++;
 
-		if (gameManager.checkWin(stone))
-		{
-			if (stone.color == 1)
-				MessageBox(hWnd, "Black Win", "Message", MB_OK);
-			else if (stone.color == 2)
-				MessageBox(hWnd, "White Win", "Message", MB_OK);
-		}
+		//if (gameManager.checkWin(stone))
+		//{
+		//	if (stone.color == 1)
+		//		MessageBox(hWnd, "Black Win", "Message", MB_OK);
+		//	else if (stone.color == 2)
+		//		MessageBox(hWnd, "White Win", "Message", MB_OK);
+		//}
 
-		
-		InvalidateRect(hWnd, NULL, TRUE);
+		//
+		//InvalidateRect(hWnd, NULL, TRUE);
 	
-		break;
+		//break;
 
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
@@ -245,7 +245,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			//	MessageBox(hWnd, "THERE IS NO STONE ANYMORE", "Message", MB_OK);
 			//}
 
-			InvalidateRect(hWnd, NULL, TRUE);
+			//InvalidateRect(hWnd, NULL, TRUE);
 			break;
         case ID_BUTTON_CONNECT:
             networkManager.connectToServer( "127.0.0.1", 5000 );

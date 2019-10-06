@@ -127,6 +127,12 @@ void NetworkManager::onPacketRead(SOCKET socket)
 	{
 		onDeleteMsgRecv(packet);
 	}
+	else if (type == PacketTypeMsg)
+	{
+		std::string msg;
+		packet.read(&msg, sizeof(msg));
+		MessageBox(m_hWnd, msg.c_str(), "Message", MB_OK);
+	}
 }
 
 void NetworkManager::onStartMsgRecv(Packet packet)
@@ -185,6 +191,7 @@ void NetworkManager::onDeleteMsgRecv(Packet packet)
 {
 	int deleteIndex;
 	packet.read(&deleteIndex, sizeof(deleteIndex));
+	
 	Stone* temp = m_gameManagerRef->getGridFromMemory();
 	temp[deleteIndex].x = 0;
 	temp[deleteIndex].y = 0;

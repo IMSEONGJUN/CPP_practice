@@ -30,11 +30,11 @@ public:
 	void drawGrid(HDC hdc);
 	void drawStone(HDC hdc, const Stone &temp);
 
-	void insertDataInStack(const Stone &indexStone);
-	void clearDataOnce(int indexValue);
-	int getLastDataInStack();
-	void removeLastDataInStack();
-	bool isStackEmpty();
+	//void insertDataInStack(const Stone &indexStone);
+	//void clearDataOnce(int indexValue);
+	//int getLastDataInStack();
+	//void removeLastDataInStack();
+	//bool isStackEmpty();
 
 	int getXcount() const;
 	int getYcount() const;
