@@ -5,7 +5,7 @@ void Drawing::drawGrid(HDC hdc, int xCount, int yCount, int xInterval, int yInte
 {
 	for (int i = 1; i <= xCount; i++)
 	{
-		MoveToEx(hdc, i * xInterval , yInterval, NULL);
+		MoveToEx(hdc, i * xInterval, yInterval, NULL);
 		LineTo(hdc, i * xInterval, yCount * yInterval); // MoveToEx의 x좌표,y좌표 지점에서 시작하여 LineTo의 x좌표y좌표 지점으로 선을 긋는다.
 	}
 
@@ -24,15 +24,19 @@ void Drawing::initializeButton(HWND hWnd, HINSTANCE hInst)
 		800, 50, 90, 30, hWnd,
 		(HMENU)ID_BUTTON_RETURN, hInst, NULL);
 
-    m_hwndConnect = CreateWindow( "BUTTON", "CONNECT",
-                                 WS_CHILD | WS_VISIBLE,
-                                 800, 150, 100, 30, hWnd,
-                                 (HMENU)ID_BUTTON_CONNECT, hInst, NULL );
+	m_hwndConnect = CreateWindow("BUTTON", "CONNECT",
+		WS_CHILD | WS_VISIBLE,
+		800, 150, 100, 30, hWnd,
+		(HMENU)ID_BUTTON_CONNECT, hInst, NULL);
 
-    CreateWindow( "BUTTON", "DISCONNECT",
-                  WS_CHILD | WS_VISIBLE,
-                  800, 200, 100, 30, hWnd,
-                  (HMENU)ID_BUTTON_DISCONNECT, hInst, NULL );
+	CreateWindow("BUTTON", "DISCONNECT",
+		WS_CHILD | WS_VISIBLE,
+		800, 200, 100, 30, hWnd,
+		(HMENU)ID_BUTTON_DISCONNECT, hInst, NULL);
+
+	HWND hWndEdit = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("Edit"), TEXT(""),
+		WS_CHILD | WS_VISIBLE,
+		800, 250, 250, 100, hWnd, (HMENU)ID_EDIT, NULL, NULL);
 }
 
 void Drawing::drawStone2(HDC hdc, int x, int y, int color, int xInterval, int yInterval)

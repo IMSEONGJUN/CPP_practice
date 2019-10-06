@@ -27,17 +27,17 @@ BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
-void initializeWinsock( HWND hWnd );
+void initializeWinsock(HWND hWnd);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPTSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPTSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
- 	// TODO: Place code here.
+	// TODO: Place code here.
 	MSG msg;
 	HACCEL hAccelTable;
 
@@ -47,7 +47,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	MyRegisterClass(hInstance);
 
 	// Perform application initialization:
-	if (!InitInstance (hInstance, nCmdShow))
+	if (!InitInstance(hInstance, nCmdShow))
 	{
 		return FALSE;
 	}
@@ -64,7 +64,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
-	return (int) msg.wParam;
+	return (int)msg.wParam;
 }
 
 
@@ -80,17 +80,17 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
-	wcex.style			= CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc	= WndProc;
-	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= 0;
-	wcex.hInstance		= hInstance;
-	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_OMOK_SERVER));
-	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
-	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_OMOK_SERVER);
-	wcex.lpszClassName	= szWindowClass;
-	wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_OMOK_SERVER));
+	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCE(IDC_OMOK_SERVER);
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassEx(&wcex);
 }
@@ -107,39 +107,39 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   HWND hWnd;
+	HWND hWnd;
 
-   hInst = hInstance; // Store instance handle in our global variable
+	hInst = hInstance; // Store instance handle in our global variable
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-                        CW_USEDEFAULT, CW_USEDEFAULT, 400, 300, NULL, NULL, hInstance, NULL );
+	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, 400, 300, NULL, NULL, hInstance, NULL);
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+	if (!hWnd)
+	{
+		return FALSE;
+	}
 
-   CreateWindow( "BUTTON", "LISTEN",
-                WS_CHILD | WS_VISIBLE,
-                100, 100, 90, 30, hWnd,
-                (HMENU)ID_BUTTON_LISTEN, hInst, NULL );
+	CreateWindow("BUTTON", "LISTEN",
+		WS_CHILD | WS_VISIBLE,
+		100, 100, 90, 30, hWnd,
+		(HMENU)ID_BUTTON_LISTEN, hInst, NULL);
 
-   CreateWindow( "BUTTON", "PRINT CONNECTED COUNT",
-                 WS_CHILD | WS_VISIBLE,
-                 100, 160, 200, 30, hWnd,
-                 (HMENU)ID_BUTTON_VIEW_CONNECTED_COUNT, hInst, NULL );
+	CreateWindow("BUTTON", "PRINT CONNECTED COUNT",
+		WS_CHILD | WS_VISIBLE,
+		100, 160, 200, 30, hWnd,
+		(HMENU)ID_BUTTON_VIEW_CONNECTED_COUNT, hInst, NULL);
 
-   CreateWindow( "BUTTON", "START",
-                 WS_CHILD | WS_VISIBLE,
-                 220, 100, 90, 30, hWnd,
-                 (HMENU)ID_BUTTON_START, hInst, NULL );
+	CreateWindow("BUTTON", "START",
+		WS_CHILD | WS_VISIBLE,
+		220, 100, 90, 30, hWnd,
+		(HMENU)ID_BUTTON_START, hInst, NULL);
 
-   g_serverManager.initialize( hWnd );
-   
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+	g_serverManager.initialize(hWnd);
 
-   return TRUE;
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
+
+	return TRUE;
 }
 
 
@@ -161,15 +161,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
-    case WM_SOCKET:
-    {
-        g_serverManager.onSocketMessage( wParam, lParam );
-    }
-        break;
-  
+	case WM_SOCKET:
+	{
+					  g_serverManager.onSocketMessage(wParam, lParam);
+	}
+		break;
+
 
 	case WM_COMMAND:
-		wmId    = LOWORD(wParam);
+		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
 		// Parse the menu selections:
 		switch (wmId)
@@ -180,17 +180,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;
-        case ID_BUTTON_LISTEN:
-            g_serverManager.listen( 5000 );
-            break;
+		case ID_BUTTON_LISTEN:
+			g_serverManager.listen(5000);
+			break;
 
-        case ID_BUTTON_VIEW_CONNECTED_COUNT:
-            Logger::debug( "Current Connected Count: %d", g_serverManager.getConnectedClientCount() );
-            break;
+		case ID_BUTTON_VIEW_CONNECTED_COUNT:
+			Logger::debug("Current Connected Count: %d", g_serverManager.getConnectedClientCount());
+			break;
 
-        case ID_BUTTON_START:
-            g_serverManager.startGame();
-            break;
+		case ID_BUTTON_START:
+			g_serverManager.startGame();
+			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}

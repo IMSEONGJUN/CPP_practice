@@ -4,6 +4,7 @@
 #define ID_BUTTON_RETURN    1000
 #define ID_BUTTON_CONNECT   1001
 #define ID_BUTTON_DISCONNECT   1002
+#define ID_EDIT				1003
 
 class Drawing
 {
@@ -20,5 +21,6 @@ public:
 private:
 
 	HWND m_hwndReturn;
-    HWND m_hwndConnect;
+	HWND m_hwndConnect;
+	HWND m_hWndEdit;
 };

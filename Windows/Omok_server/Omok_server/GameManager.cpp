@@ -9,238 +9,242 @@ GameManager::GameManager()
 
 GameManager::~GameManager()
 {
-    delete[] m_GridInMemory;
+	delete[] m_GridInMemory;
 }
 
-void GameManager::initialize( int xCount, int yCount, int xInterval, int yInterval )
+void GameManager::initialize(int xCount, int yCount, int xInterval, int yInterval)
 {
-    m_xCount = xCount;
-    m_yCount = yCount;
-    m_xInterval = xInterval;
-    m_yInterval = yInterval;
+	m_xCount = xCount;
+	m_yCount = yCount;
+	m_xInterval = xInterval;
+	m_yInterval = yInterval;
 
-    m_GridInMemory = new Stone[xCount * yCount];
+	m_GridInMemory = new Stone[xCount * yCount];
 }
 
 void GameManager::setGridInMemoryZero()
 {
-    for( int i = 0; i < getXcount() * getYcount(); i++ )
-    {
-        m_GridInMemory[i].x = 0;
-        m_GridInMemory[i].y = 0;
-        m_GridInMemory[i].color = 0;
-    }
+	for (int i = 0; i < getXcount() * getYcount(); i++)
+	{
+		m_GridInMemory[i].x = 0;
+		m_GridInMemory[i].y = 0;
+		m_GridInMemory[i].color = 0;
+	}
 }
 
-void GameManager::setStoneInMemory( const Stone &indexStone )
+void GameManager::setStoneInMemory(const Stone &indexStone)
 {
-    int address = indexStone.y * getXcount() + indexStone.x; 
- 
-    m_GridInMemory[address].x = indexStone.x;
-    m_GridInMemory[address].y = indexStone.y;
-    m_GridInMemory[address].color = indexStone.color;
+	int address = indexStone.y * getXcount() + indexStone.x;
+
+	m_GridInMemory[address].x = indexStone.x;
+	m_GridInMemory[address].y = indexStone.y;
+	m_GridInMemory[address].color = indexStone.color;
 }
 
-int GameManager::getIndex( int x, int y )
+int GameManager::getIndex(int x, int y)
 {
-    return y * getXcount() + x;
+	return y * getXcount() + x;
 }
 
-int GameManager::horizon( int x, int y, int color )
+int GameManager::horizon(int x, int y, int color)
 {
-    int stoneCountHorizon = 0;
+	int stoneCountHorizon = 0;
 
-    for( int i = 1; i < 5; i++ )
-    {
-        if( m_GridInMemory[getIndex( x + i, y )].color == color )
-        {
-            stoneCountHorizon++;
-        }
-        else if( m_GridInMemory[getIndex( x + i, y )].color != color )
-        {
-            break;
-        }
-        if( x + i > getXcount() )
-        {
-            break;
-        }
+	for (int i = 1; i < 5; i++)
+	{
+		if (x + i > getXcount())
+		{
+			break;
+		}
 
-    }
+		if (m_GridInMemory[getIndex(x + i, y)].color == color)
+		{
+			stoneCountHorizon++;
+		}
+		else if (m_GridInMemory[getIndex(x + i, y)].color != color)
+		{
+			break;
+		}
 
-    for( int i = 1; i < 5; i++ )
-    {
-        if( m_GridInMemory[getIndex( x - i, y )].color == color )
-        {
-            stoneCountHorizon++;
-        }
-        else if( m_GridInMemory[getIndex( x - i, y )].color != color )
-        {
-            break;
-        }
-        if( x - i < 0 )
-        {
-            break;
-        }
 
-    }
+	}
 
-    return stoneCountHorizon;
+	for (int i = 1; i < 5; i++)
+	{
+		if (x - i < 0)
+		{
+			break;
+		}
+
+		if (m_GridInMemory[getIndex(x - i, y)].color == color)
+		{
+			stoneCountHorizon++;
+		}
+		else if (m_GridInMemory[getIndex(x - i, y)].color != color)
+		{
+			break;
+		}
+	}
+
+	return stoneCountHorizon;
 }
 
-int GameManager::vertical( int x, int y, int color )
+int GameManager::vertical(int x, int y, int color)
 {
-    int stoneCountVertical = 0;
+	int stoneCountVertical = 0;
 
-    for( int i = 1; i < 5; i++ )
-    {
-        if( m_GridInMemory[getIndex( x, y - i )].color == color )
-        {
-            stoneCountVertical++;
-        }
-        else if( m_GridInMemory[getIndex( x, y - i )].color != color )
-        {
-            break;
-        }
-        if( y - i < 0 )
-        {
-            break;
-        }
+	for (int i = 1; i < 5; i++)
+	{
+		if (y - i < 0)
+		{
+			break;
+		}
 
-    }
+		if (m_GridInMemory[getIndex(x, y - i)].color == color)
+		{
+			stoneCountVertical++;
+		}
+		else if (m_GridInMemory[getIndex(x, y - i)].color != color)
+		{
+			break;
+		}
+	}
 
-    for( int i = 1; i < 5; i++ )
-    {
-        if( m_GridInMemory[getIndex( x, y + i )].color == color )
-        {
-            stoneCountVertical++;
-        }
-        else if( m_GridInMemory[getIndex( x, y + i )].color != color )
-        {
-            break;
-        }
-        if( y + i > getYcount() )
-        {
-            break;
-        }
+	for (int i = 1; i < 5; i++)
+	{
+		if (y + i > getYcount())
+		{
+			break;
+		}
 
-    }
-    return stoneCountVertical;
+		if (m_GridInMemory[getIndex(x, y + i)].color == color)
+		{
+			stoneCountVertical++;
+		}
+		else if (m_GridInMemory[getIndex(x, y + i)].color != color)
+		{
+			break;
+		}
+	}
+
+	return stoneCountVertical;
 }
 
-int GameManager::diagonalRight( int x, int y, int color )
+int GameManager::diagonalRight(int x, int y, int color)
 {
-    int stoneCountDiagonalRight = 0;
+	int stoneCountDiagonalRight = 0;
 
-    for( int i = 1; i < 5; i++ )
-    {
-        if( m_GridInMemory[getIndex( x + i, y - i )].color == color )
-        {
-            stoneCountDiagonalRight++;
-        }
-        else if( m_GridInMemory[getIndex( x + i, y - i )].color != color )
-        {
-            break;
-        }
-        if( y - i < 0 || x + i > getXcount() )
-        {
-            break;
-        }
+	for (int i = 1; i < 5; i++)
+	{
+		if (y - i < 0 || x + i > getXcount())
+		{
+			break;
+		}
 
-    }
+		if (m_GridInMemory[getIndex(x + i, y - i)].color == color)
+		{
+			stoneCountDiagonalRight++;
+		}
+		else if (m_GridInMemory[getIndex(x + i, y - i)].color != color)
+		{
+			break;
+		}
+	}
 
-    for( int i = 1; i < 5; i++ )
-    {
-        if( m_GridInMemory[getIndex( x - i, y + i )].color == color )
-        {
-            stoneCountDiagonalRight++;
-        }
-        else if( m_GridInMemory[getIndex( x - i, y + i )].color != color )
-        {
-            break;
-        }
-        if( y + i > getYcount() || x - i < 0 )
-        {
-            break;
-        }
+	for (int i = 1; i < 5; i++)
+	{
+		if (y + i > getYcount() || x - i < 0)
+		{
+			break;
+		}
 
-    }
-    return stoneCountDiagonalRight;
+		if (m_GridInMemory[getIndex(x - i, y + i)].color == color)
+		{
+			stoneCountDiagonalRight++;
+		}
+		else if (m_GridInMemory[getIndex(x - i, y + i)].color != color)
+		{
+			break;
+		}
+	}
+
+	return stoneCountDiagonalRight;
 }
 
-int GameManager::diagonalLeft( int x, int y, int color )
+int GameManager::diagonalLeft(int x, int y, int color)
 {
-    int stoneCountDiagonalLeft = 0;
+	int stoneCountDiagonalLeft = 0;
 
-    for( int i = 1; i < 5; i++ )
-    {
-        if( m_GridInMemory[getIndex( x - i, y - i )].color == color )
-        {
-            stoneCountDiagonalLeft++;
-        }
-        else if( m_GridInMemory[getIndex( x - i, y - i )].color != color )
-        {
-            break;
-        }
-        if( y - i < 0 || x - i < 0 )
-        {
-            break;
-        }
+	for (int i = 1; i < 5; i++)
+	{
+		if (y - i < 0 || x - i < 0)
+		{
+			break;
+		}
 
-    }
+		if (m_GridInMemory[getIndex(x - i, y - i)].color == color)
+		{
+			stoneCountDiagonalLeft++;
+		}
+		else if (m_GridInMemory[getIndex(x - i, y - i)].color != color)
+		{
+			break;
+		}
+	}
 
-    for( int i = 1; i < 5; i++ )
-    {
-        if( m_GridInMemory[getIndex( x + i, y + i )].color == color )
-        {
-            stoneCountDiagonalLeft++;
-        }
-        else if( m_GridInMemory[getIndex( x + i, y + i )].color != color )
-        {
-            break;
-        }
-        if( y + i > getYcount() || x + i > getXcount() )
-        {
-            break;
-        }
+	for (int i = 1; i < 5; i++)
+	{
+		if (y + i > getYcount() || x + i > getXcount())
+		{
+			break;
+		}
 
-    }
+		if (m_GridInMemory[getIndex(x + i, y + i)].color == color)
+		{
+			stoneCountDiagonalLeft++;
+		}
+		else if (m_GridInMemory[getIndex(x + i, y + i)].color != color)
+		{
+			break;
+		}
+	}
 
-    return stoneCountDiagonalLeft;
+	return stoneCountDiagonalLeft;
 }
 
-bool GameManager::checkWin( const Stone &indexStone )
+bool GameManager::checkWin(const Stone &indexStone)
 {
 
-    int x = indexStone.x;
-    int y = indexStone.y;
-    int color = indexStone.color;
+	int x = indexStone.x;
+	int y = indexStone.y;
+	int color = indexStone.color;
 
-    int stoneCountHorizon = horizon( x, y, color );
-    int stoneCountVertical = vertical( x, y, color );
-    int stoneCountDiagonalRight = diagonalRight( x, y, color );
-    int stoneCountDiagonalLeft = diagonalLeft( x, y, color );
+	int stoneCountHorizon = horizon(x, y, color);
+	int stoneCountVertical = vertical(x, y, color);
+	int stoneCountDiagonalRight = diagonalRight(x, y, color);
+	int stoneCountDiagonalLeft = diagonalLeft(x, y, color);
 
-    return (stoneCountHorizon >= 4 || stoneCountVertical >= 4 ||
-             stoneCountDiagonalRight >= 4 || stoneCountDiagonalLeft >= 4);
+	return (stoneCountHorizon >= 4 || stoneCountVertical >= 4 ||
+		stoneCountDiagonalRight >= 4 || stoneCountDiagonalLeft >= 4);
 
 }
 
 int GameManager::getXcount() const
 {
-    return m_xCount;
+	return m_xCount;
 }
 
 int GameManager::getYcount() const
 {
-    return m_yCount;
+	return m_yCount;
 }
 
 int GameManager::getXinterval() const
 {
-    return m_xInterval;
+	return m_xInterval;
 }
 
 int GameManager::getYinterval() const
 {
-    return m_yInterval;
+	return m_yInterval;
 }

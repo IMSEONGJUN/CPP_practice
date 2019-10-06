@@ -116,7 +116,7 @@ void GameManager::transToIndexValue(Stone &stone)
 void GameManager::setStoneInMemory(const Stone &indexStone)
 {
 	int address = indexStone.y * getXcount() + indexStone.x; // x, y 좌표는 인덱스 값이고, width값은 1부터 시작하는 정수값이다. 
-	                                                         //바둑판에 세로줄이 1부터시작이고 인덱스는 그 위치가 0이다.
+	//바둑판에 세로줄이 1부터시작이고 인덱스는 그 위치가 0이다.
 	m_GridInMemory[address].x = indexStone.x;
 	m_GridInMemory[address].y = indexStone.y;
 	m_GridInMemory[address].color = indexStone.color;
@@ -131,7 +131,7 @@ Stone *GameManager::getGridFromMemory() const
 bool GameManager::isAvailableDrawStone(const Stone &indexStone)
 {
 	return (m_GridInMemory[indexStone.y * getXcount() + indexStone.x].color == 0
-	&& indexStone.x < getXcount() && indexStone.x >= 0 && indexStone.y < getYcount() && indexStone.y >= 0);// 여기 질문
+		&& indexStone.x < getXcount() && indexStone.x >= 0 && indexStone.y < getYcount() && indexStone.y >= 0);// 여기 질문
 }
 
 int GameManager::horizon(int x, int y, int color)
@@ -227,7 +227,7 @@ int GameManager::diagonalRight(int x, int y, int color)
 		}
 		else if (m_GridInMemory[getIndex(x + i, y - i)].color != color)
 		{
-			break; 
+			break;
 		}
 		if (y - i < 0 || x + i > getXcount())
 		{
@@ -298,15 +298,15 @@ int GameManager::diagonalLeft(int x, int y, int color)
 
 bool GameManager::checkWin(const Stone &indexStone)
 {
-	
+
 	int x = indexStone.x;
 	int y = indexStone.y;
 	int color = indexStone.color;
-	
-	int stoneCountHorizon = horizon(x,y,color);
-	int stoneCountVertical = vertical(x,y,color);
-	int stoneCountDiagonalRight = diagonalRight(x,y,color);
-	int stoneCountDiagonalLeft = diagonalLeft(x,y,color);
+
+	int stoneCountHorizon = horizon(x, y, color);
+	int stoneCountVertical = vertical(x, y, color);
+	int stoneCountDiagonalRight = diagonalRight(x, y, color);
+	int stoneCountDiagonalLeft = diagonalLeft(x, y, color);
 
 	return (stoneCountHorizon >= 4 || stoneCountVertical >= 4 ||
 		stoneCountDiagonalRight >= 4 || stoneCountDiagonalLeft >= 4);
