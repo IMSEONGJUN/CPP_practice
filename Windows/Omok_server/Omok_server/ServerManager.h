@@ -22,8 +22,8 @@ private:
 	void onPacketRead(SOCKET clientSocket);
 	void broadcastPacket(const Packet& packet) const;
 	void sendingWinStoneColor(Stone stone) const;
-	void putStoneInMemAndSendtoClient(Packet packet);
-	void checkDeleteStoneColorAndDelete(Packet packet);
+	void putStoneInMemAndSendtoClient(Packet& packet);
+	void checkDeleteStoneColorAndDelete(Packet& packet);
 
 private:
 	HWND m_hWnd;

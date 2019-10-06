@@ -24,11 +24,11 @@ public:
 	int getInitStoneColor() const;
 
 private:
-	void onDeleteMsgRecv(Packet packet);
-	void onStartMsgRecv(Packet packet);
-	void setStoneColor(Packet packet);
-	void whenTypeIsPut(Packet packet);
-	void onJudgementMsgRecv(Packet packet);
+	void onDeleteMsgRecv(Packet& packet);
+	void onStartMsgRecv(Packet& packet);
+	void setStoneColor(Packet& packet);
+	void whenTypeIsPut(Packet& packet);
+	void onJudgementMsgRecv(Packet& packet);
 
 private:
 	HWND m_hWnd;

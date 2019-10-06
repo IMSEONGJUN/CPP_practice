@@ -149,7 +149,7 @@ void ServerManager::sendingWinStoneColor(Stone stone) const
 	Logger::debug("check win -> %d, broadcasted", color);
 }
 
-void ServerManager::putStoneInMemAndSendtoClient(Packet packet)
+void ServerManager::putStoneInMemAndSendtoClient(Packet& packet)
 {
 	Stone stone;
 	packet.read(&stone.x, sizeof(stone.x));
@@ -169,7 +169,7 @@ void ServerManager::putStoneInMemAndSendtoClient(Packet packet)
 	}
 }
 
-void ServerManager::checkDeleteStoneColorAndDelete(Packet packet)
+void ServerManager::checkDeleteStoneColorAndDelete(Packet& packet)
 {
 	int deleteColor;
 	packet.read(&deleteColor, sizeof(deleteColor));

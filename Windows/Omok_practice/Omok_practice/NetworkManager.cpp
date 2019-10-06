@@ -135,21 +135,21 @@ void NetworkManager::onPacketRead(SOCKET socket)
 	}
 }
 
-void NetworkManager::onStartMsgRecv(Packet packet)
+void NetworkManager::onStartMsgRecv(Packet& packet)
 {
 	int color;
 	packet.read(&color, sizeof(color));
 	setMyTurn(color == m_initStoneColor);
 }
 
-void NetworkManager::setStoneColor(Packet packet)
+void NetworkManager::setStoneColor(Packet& packet)
 {
 	int temp;
 	packet.read(&temp, sizeof(temp));
 	m_initStoneColor = temp;
 }
 
-void NetworkManager::whenTypeIsPut(Packet packet)
+void NetworkManager::whenTypeIsPut(Packet& packet)
 {
 	Stone stone;
 	packet.read(&stone.x, sizeof(stone.x));
@@ -167,7 +167,7 @@ void NetworkManager::whenTypeIsPut(Packet packet)
 	Logger::debug("onPacketRead: %d, %d, %d", stone.x, stone.y, stone.color);
 }
 
-void NetworkManager::onJudgementMsgRecv(Packet packet)
+void NetworkManager::onJudgementMsgRecv(Packet& packet)
 {
 	int winColor;
 	packet.read(&winColor, sizeof(winColor));
@@ -187,7 +187,7 @@ void NetworkManager::sendPacketTypeDelete()
 	Packet::send(m_socket, packet);
 }
 
-void NetworkManager::onDeleteMsgRecv(Packet packet)
+void NetworkManager::onDeleteMsgRecv(Packet& packet)
 {
 	int deleteIndex;
 	packet.read(&deleteIndex, sizeof(deleteIndex));

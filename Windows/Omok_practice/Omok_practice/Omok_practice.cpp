@@ -248,7 +248,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			//InvalidateRect(hWnd, NULL, TRUE);
 			break;
         case ID_BUTTON_CONNECT:
-            networkManager.connectToServer( "127.0.0.1", 5000 );
+            networkManager.connectToServer( "192.168.0.9", 5000 );
             break;
 
         case ID_BUTTON_DISCONNECT:
