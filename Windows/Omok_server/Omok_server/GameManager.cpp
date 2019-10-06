@@ -242,7 +242,14 @@ void GameManager::insertDataInStack(const Stone& stone)
 
 int GameManager::getLastDataInStack()
 {
-	return m_stackData.top();
+	if (!isStackEmpty())
+	{
+		return m_stackData.top();
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 void GameManager::removeTopDataInStackOnce()

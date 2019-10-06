@@ -11,6 +11,7 @@ enum PacketType
     PacketTypeStart,
 	PacketTypeDeleteColor,
 	PacketTypeDeleteIndex,
+	PacketTypeMsg,
 };
 
 class Packet
