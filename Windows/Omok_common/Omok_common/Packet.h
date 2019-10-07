@@ -11,6 +11,7 @@ enum PacketType
     PacketTypeStart,
 	PacketTypeDeleteColor,
 	PacketTypeDeleteIndex,
+	PacketTypeNoStones,
 	PacketTypeMsg,
 };
 
@@ -31,6 +32,8 @@ public:
     size_t getBodySize() const;
 
     static void send( SOCKET socket, const Packet& packet );
+private:
+	void increaseBufferSize();
 
 private:
     std::vector<char> m_buffer;

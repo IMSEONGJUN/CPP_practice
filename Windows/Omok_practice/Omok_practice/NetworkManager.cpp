@@ -127,11 +127,9 @@ void NetworkManager::onPacketRead(SOCKET socket)
 	{
 		onDeleteMsgRecv(packet);
 	}
-	else if (type == PacketTypeMsg)
+	else if (type == PacketTypeNoStones)
 	{
-		std::string msg;
-		packet.read(&msg, sizeof(msg));
-		MessageBox(m_hWnd, msg.c_str(), "Message", MB_OK);
+		MessageBox(m_hWnd, "no stones", "Message", MB_OK);
 	}
 }
 

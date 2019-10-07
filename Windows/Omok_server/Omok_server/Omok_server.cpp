@@ -134,12 +134,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		220, 100, 90, 30, hWnd,
 		(HMENU)ID_BUTTON_START, hInst, NULL);
 
-	g_serverManager.initialize(hWnd);
+	bool boolean = g_serverManager.initialize(hWnd);
+	
+	if (!boolean) return FALSE;
+	else {
+		ShowWindow(hWnd, nCmdShow);
+		UpdateWindow(hWnd);
 
-	ShowWindow(hWnd, nCmdShow);
-	UpdateWindow(hWnd);
-
-	return TRUE;
+		return TRUE;
+	}
+	
 }
 
 

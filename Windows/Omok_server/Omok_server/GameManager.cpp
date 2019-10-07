@@ -246,10 +246,7 @@ int GameManager::getLastDataInStack()
 	{
 		return m_stackData.top();
 	}
-	else
-	{
-		return -1;
-	}
+	else throw 0;
 }
 
 void GameManager::removeTopDataInStackOnce()

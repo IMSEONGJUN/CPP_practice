@@ -173,17 +173,17 @@ void ServerManager::checkDeleteStoneColorAndDelete(Packet& packet)
 {
 	int deleteColor;
 	packet.read(&deleteColor, sizeof(deleteColor));
-	
-	int deleteIndex = m_gameManager.getLastDataInStack();
-	if (deleteIndex == -1)
+	int deleteIndex;
+	try{
+		deleteIndex = m_gameManager.getLastDataInStack();
+	}
+	catch (int)
 	{
-		std::string msg = "There is no more stone";
-		Packet packet(PacketTypeMsg);
-		packet.write(&msg, sizeof(msg));
+		Packet packet(PacketTypeNoStones);
 		broadcastPacket(packet);
 		return;
 	}
-
+	
 	Stone* temp = m_gameManager.getGridInMemory();
 	if (temp[deleteIndex].color == deleteColor)
 	{

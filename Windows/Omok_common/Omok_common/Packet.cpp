@@ -31,7 +31,14 @@ Packet::~Packet()
 void Packet::write( const void* data, size_t size )
 {
     size_t pos = m_writePosition + DefaultHeaderSize;
+
+	if (DefaultPacketSize - pos <= size)
+	{
+		increaseBufferSize();
+	}
+
     memcpy( m_buffer.data() + pos, data, size );
+	
     m_writePosition += size;
 
     *m_bodySizeLocator = m_writePosition;
@@ -66,6 +73,11 @@ PacketType Packet::getType() const
 size_t Packet::getBodySize() const
 {
     return m_writePosition;
+}
+
+void Packet::increaseBufferSize()
+{
+	m_buffer.resize(m_writePosition * 2);
 }
 
 void Packet::send( SOCKET socket, const Packet& packet )
