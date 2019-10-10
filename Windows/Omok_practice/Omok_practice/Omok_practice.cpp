@@ -254,7 +254,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case ID_BUTTON_DISCONNECT:
             networkManager.disconnect();
             break;
-
+		case ID_BUTTON_SENDMSG:
+			networkManager.sendMessage();
+			break;
 		case ID_FILE_SAVE:
 			saveFile(hWnd);
 			break;

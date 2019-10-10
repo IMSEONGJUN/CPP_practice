@@ -7,7 +7,7 @@ enum PacketType
 {
     PacketTypePut = 1,
     PacketTypeJudgement,
-    PacketTypeStoneColor,
+    PacketTypeSetBeginnigStoneColor,
     PacketTypeStart,
 	PacketTypeDeleteColor,
 	PacketTypeDeleteIndex,

@@ -89,7 +89,7 @@ void ServerManager::onAccept(SOCKET listenSocket)
 
 	int stoneColor = (getConnectedClientCount() % 2) + 1;
 
-	Packet packet(PacketTypeStoneColor);
+	Packet packet(PacketTypeSetBeginnigStoneColor);
 	packet.write(&stoneColor, sizeof(stoneColor));
 	Packet::send(clientSocket, packet);
 
@@ -120,6 +120,10 @@ void ServerManager::onPacketRead(SOCKET clientSocket)
 	else if (type == PacketTypeDeleteColor)
 	{
 		checkDeleteStoneColorAndDelete(packet);
+	}
+	else if (type == PacketTypeMsg)
+	{
+		messageBroadcast(packet);
 	}
 }
 
@@ -197,4 +201,9 @@ void ServerManager::checkDeleteStoneColorAndDelete(Packet& packet)
 		broadcastPacket(packetDeleteIndex);
 	}
 	else return;
+}
+
+void ServerManager::messageBroadcast(Packet& packet)
+{
+	broadcastPacket(packet);
 }

@@ -24,6 +24,7 @@ private:
 	void sendingWinStoneColor(Stone stone) const;
 	void putStoneInMemAndSendtoClient(Packet& packet);
 	void checkDeleteStoneColorAndDelete(Packet& packet);
+	void messageBroadcast(Packet& packet);
 
 private:
 	HWND m_hWnd;

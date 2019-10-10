@@ -2,6 +2,8 @@
 
 #include <string>
 #include "Packet.h"
+#include <string>
+
 
 class GameManager;
 
@@ -17,6 +19,7 @@ public:
 	void setMyTurn(bool myTurn);
 	bool isMyTurn() const;
 	void sendStoneIndex(int x, int y, int color);
+	void sendMessage();
 
 	void onSocketMessage(WPARAM wParam, LPARAM lParam);
 	void onPacketRead(SOCKET socket);
@@ -29,6 +32,7 @@ private:
 	void setStoneColor(Packet& packet);
 	void whenTypeIsPut(Packet& packet);
 	void onJudgementMsgRecv(Packet& packet);
+	void printMessageOnMyList(Packet& packet);
 
 private:
 	HWND m_hWnd;
@@ -36,5 +40,6 @@ private:
 	GameManager* m_gameManagerRef;
 	int m_initStoneColor;
 	bool m_myTurn{ false };
+	std::string m_recentylSentMsg;
 };
 

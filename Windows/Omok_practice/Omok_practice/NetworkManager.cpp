@@ -76,6 +76,22 @@ void NetworkManager::sendStoneIndex(int x, int y, int color)
 	Packet::send(m_socket, packet);
 }
 
+void NetworkManager::sendMessage()
+{
+	Drawing &draw = m_gameManagerRef->getDrawing();
+	HWND edit = draw.getEditbox();
+	
+	char* buff;
+	GetWindowText(edit, buff, 256);
+
+	m_recentylSentMsg = buff;
+	
+	Packet packet(PacketTypeMsg);
+	packet.write(buff, strlen(buff));
+
+	Packet::send(m_socket, packet);
+}
+
 void NetworkManager::onSocketMessage(WPARAM wParam, LPARAM lParam)
 {
 	SOCKET socket = (SOCKET)wParam;
@@ -111,7 +127,7 @@ void NetworkManager::onPacketRead(SOCKET socket)
 	{
 		onStartMsgRecv(packet);
 	}
-	else if (type == PacketTypeStoneColor)
+	else if (type == PacketTypeSetBeginnigStoneColor)
 	{
 		setStoneColor(packet);
 	}
@@ -130,6 +146,10 @@ void NetworkManager::onPacketRead(SOCKET socket)
 	else if (type == PacketTypeNoStones)
 	{
 		MessageBox(m_hWnd, "no stones", "Message", MB_OK);
+	}
+	else if (PacketTypeMsg)
+	{
+		printMessageOnMyList(packet);
 	}
 }
 
@@ -198,3 +218,19 @@ void NetworkManager::onDeleteMsgRecv(Packet& packet)
 	InvalidateRect(m_hWnd, NULL, TRUE);
 }
 
+void NetworkManager::printMessageOnMyList(Packet& packet)
+{
+	std::string buffer;
+	packet.read(&buffer, sizeof(buffer));
+	if (buffer == m_recentylSentMsg)
+	{
+		Drawing draw = m_gameManagerRef->getDrawing();
+		HWND list = draw.getListbox();
+		
+		m_recentylSentMsg = "";
+	}
+	else
+	{
+
+	}
+}
