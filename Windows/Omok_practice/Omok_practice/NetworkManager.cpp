@@ -14,7 +14,7 @@ NetworkManager::NetworkManager()
 
 NetworkManager::~NetworkManager()
 {
-	delete[] m_recentylSentMsg;
+	delete[] m_myRecentlySentMsg;
 }
 
 bool NetworkManager::initialize(HWND hWnd, GameManager* gameManager)
@@ -25,8 +25,8 @@ bool NetworkManager::initialize(HWND hWnd, GameManager* gameManager)
 
 	m_hWnd = hWnd;
 	m_gameManagerRef = gameManager;
-	m_recentylSentMsg = new char[256];
-	memset(m_recentylSentMsg, 0, 256);
+	m_myRecentlySentMsg = new char[256];
+	memset(m_myRecentlySentMsg, 0, 256);
 
 	return true;
 }
@@ -82,12 +82,12 @@ void NetworkManager::sendStoneIndex(int x, int y, int color)
 void NetworkManager::sendMessage()
 {
 	Drawing &draw = m_gameManagerRef->getDrawing();
-	HWND edit = draw.getEditbox();
+	HWND editbox = draw.getEditbox();
 	
 	char *buff = new char[256];
-	GetWindowText(edit, buff, 256);
+	GetWindowText(editbox, buff, 256);
 
-	m_recentylSentMsg = buff;
+	strcpy_s(m_myRecentlySentMsg, 256, buff);
 	
 	Packet packet(PacketTypeMsg);
 	packet.write(buff, strlen(buff));
@@ -133,7 +133,7 @@ void NetworkManager::onPacketRead(SOCKET socket)
 	}
 	else if (type == PacketTypeSetBeginnigStoneColor)
 	{
-		setStoneColor(packet);
+		setBeginningStoneColor(packet);
 	}
 	else if (type == PacketTypePut)
 	{
@@ -164,7 +164,7 @@ void NetworkManager::onStartMsgRecv(Packet& packet)
 	setMyTurn(color == m_initStoneColor);
 }
 
-void NetworkManager::setStoneColor(Packet& packet)
+void NetworkManager::setBeginningStoneColor(Packet& packet)
 {
 	int temp;
 	packet.read(&temp, sizeof(temp));
@@ -226,21 +226,31 @@ void NetworkManager::printMessageOnMyList(Packet& packet)
 {
 	char* buffer = new char[256];
 	memset(buffer, 0, 256);
+
 	packet.read(buffer, strlen(buffer));
-	if (buffer == m_recentylSentMsg)
+	Drawing &draw = m_gameManagerRef->getDrawing();
+	HWND list = draw.getListbox();
+
+	if (strcmp(buffer, m_myRecentlySentMsg) == 0)
 	{
 		Drawing draw = m_gameManagerRef->getDrawing();
 		HWND list = draw.getListbox();
-		std::string nick = "me: ";
-		nick += buffer;
-		SetWindowText(list, nick.c_str());
 		
-		m_recentylSentMsg = "";
+		//char* nick = "me: ";
+		//strcat(nick, buffer);
+		
+		SetWindowText(list, buffer);
+		
+		m_myRecentlySentMsg = "";
 	}
 	else
 	{
 		Drawing draw = m_gameManagerRef->getDrawing();
 		HWND list = draw.getListbox();
+
+		//char* nick = "opponent: ";
+		//strcat(nick, buffer);
+
 		SetWindowText(list, buffer);
 	}
 	delete[] buffer;

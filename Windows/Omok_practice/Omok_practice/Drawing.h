@@ -27,5 +27,5 @@ private:
 	HWND m_hwndReturn;
 	HWND m_hwndConnect;
 	HWND m_hWndList;
-	HWND m_EditBox;
+	HWND m_hWndEditBox;
 };

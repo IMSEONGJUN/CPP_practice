@@ -38,7 +38,7 @@ void Drawing::initializeButton(HWND hWnd, HINSTANCE hInst)
 		WS_CHILD | WS_VISIBLE | ES_AUTOVSCROLL,
 		800, 250, 250, 150, hWnd, (HMENU)ID_LIST, NULL, NULL);
 
-	m_EditBox = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("EDIT"), TEXT(""),
+	m_hWndEditBox = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("EDIT"), TEXT(""),
 		WS_CHILD | WS_VISIBLE,
 		800, 420, 250, 25, hWnd, (HMENU)ID_EDIT, NULL, NULL);
 
@@ -55,7 +55,7 @@ HWND Drawing::getListbox() const
 
 HWND Drawing::getEditbox() const
 {
-	return m_EditBox;
+	return m_hWndEditBox;
 }
 
 void Drawing::drawStone2(HDC hdc, int x, int y, int color, int xInterval, int yInterval)

@@ -3,7 +3,7 @@
 #include <string>
 #include "Packet.h"
 #include <string>
-
+#include <Windows.h>
 
 class GameManager;
 
@@ -29,7 +29,7 @@ public:
 private:
 	void onDeleteMsgRecv(Packet& packet);
 	void onStartMsgRecv(Packet& packet);
-	void setStoneColor(Packet& packet);
+	void setBeginningStoneColor(Packet& packet);
 	void whenTypeIsPut(Packet& packet);
 	void onJudgementMsgRecv(Packet& packet);
 	void printMessageOnMyList(Packet& packet);
@@ -40,6 +40,6 @@ private:
 	GameManager* m_gameManagerRef;
 	int m_initStoneColor;
 	bool m_myTurn{ false };
-	char* m_recentylSentMsg;
+	char* m_myRecentlySentMsg;
 };
 

@@ -167,7 +167,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_SOCKET:
 	{
-					  g_serverManager.onSocketMessage(wParam, lParam);
+		 g_serverManager.onSocketMessage(wParam, lParam);
 	}
 		break;
 
