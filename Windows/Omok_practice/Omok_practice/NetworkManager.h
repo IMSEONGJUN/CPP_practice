@@ -40,6 +40,6 @@ private:
 	GameManager* m_gameManagerRef;
 	int m_initStoneColor;
 	bool m_myTurn{ false };
-	std::string m_recentylSentMsg;
+	char* m_recentylSentMsg;
 };
 

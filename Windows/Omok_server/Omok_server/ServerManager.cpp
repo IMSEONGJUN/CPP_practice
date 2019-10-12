@@ -123,7 +123,7 @@ void ServerManager::onPacketRead(SOCKET clientSocket)
 	}
 	else if (type == PacketTypeMsg)
 	{
-		messageBroadcast(packet);
+		broadcastPacket(packet);
 	}
 }
 
@@ -201,9 +201,4 @@ void ServerManager::checkDeleteStoneColorAndDelete(Packet& packet)
 		broadcastPacket(packetDeleteIndex);
 	}
 	else return;
-}
-
-void ServerManager::messageBroadcast(Packet& packet)
-{
-	broadcastPacket(packet);
 }

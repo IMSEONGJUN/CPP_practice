@@ -14,6 +14,7 @@ NetworkManager::NetworkManager()
 
 NetworkManager::~NetworkManager()
 {
+	delete[] m_recentylSentMsg;
 }
 
 bool NetworkManager::initialize(HWND hWnd, GameManager* gameManager)
@@ -24,6 +25,8 @@ bool NetworkManager::initialize(HWND hWnd, GameManager* gameManager)
 
 	m_hWnd = hWnd;
 	m_gameManagerRef = gameManager;
+	m_recentylSentMsg = new char[256];
+	memset(m_recentylSentMsg, 0, 256);
 
 	return true;
 }
@@ -81,7 +84,7 @@ void NetworkManager::sendMessage()
 	Drawing &draw = m_gameManagerRef->getDrawing();
 	HWND edit = draw.getEditbox();
 	
-	char* buff;
+	char *buff = new char[256];
 	GetWindowText(edit, buff, 256);
 
 	m_recentylSentMsg = buff;
@@ -90,6 +93,7 @@ void NetworkManager::sendMessage()
 	packet.write(buff, strlen(buff));
 
 	Packet::send(m_socket, packet);
+	delete[] buff;
 }
 
 void NetworkManager::onSocketMessage(WPARAM wParam, LPARAM lParam)
@@ -220,17 +224,24 @@ void NetworkManager::onDeleteMsgRecv(Packet& packet)
 
 void NetworkManager::printMessageOnMyList(Packet& packet)
 {
-	std::string buffer;
-	packet.read(&buffer, sizeof(buffer));
+	char* buffer = new char[256];
+	memset(buffer, 0, 256);
+	packet.read(buffer, strlen(buffer));
 	if (buffer == m_recentylSentMsg)
 	{
 		Drawing draw = m_gameManagerRef->getDrawing();
 		HWND list = draw.getListbox();
+		std::string nick = "me: ";
+		nick += buffer;
+		SetWindowText(list, nick.c_str());
 		
 		m_recentylSentMsg = "";
 	}
 	else
 	{
-
+		Drawing draw = m_gameManagerRef->getDrawing();
+		HWND list = draw.getListbox();
+		SetWindowText(list, buffer);
 	}
+	delete[] buffer;
 }
