@@ -40,6 +40,5 @@ private:
 	GameManager* m_gameManagerRef;
 	int m_initStoneColor;
 	bool m_myTurn{ false };
-	char* m_myRecentlySentMsg;
 };
 

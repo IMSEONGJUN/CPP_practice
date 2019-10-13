@@ -31,7 +31,7 @@ public:
     PacketType getType() const;
     size_t getBodySize() const;
 
-    static void send( SOCKET socket, const Packet& packet );
+	static void send(SOCKET socket, const Packet& packet);
 private:
 	void increaseBufferSize();
 

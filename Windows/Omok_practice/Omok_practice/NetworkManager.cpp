@@ -14,7 +14,6 @@ NetworkManager::NetworkManager()
 
 NetworkManager::~NetworkManager()
 {
-	delete[] m_myRecentlySentMsg;
 }
 
 bool NetworkManager::initialize(HWND hWnd, GameManager* gameManager)
@@ -25,9 +24,7 @@ bool NetworkManager::initialize(HWND hWnd, GameManager* gameManager)
 
 	m_hWnd = hWnd;
 	m_gameManagerRef = gameManager;
-	m_myRecentlySentMsg = new char[256];
-	memset(m_myRecentlySentMsg, 0, 256);
-
+	
 	return true;
 }
 
@@ -82,14 +79,13 @@ void NetworkManager::sendStoneIndex(int x, int y, int color)
 void NetworkManager::sendMessage()
 {
 	Drawing &draw = m_gameManagerRef->getDrawing();
-	HWND editbox = draw.getEditbox();
+	HWND &editbox = draw.getEditbox();
 	
 	char *buff = new char[256];
 	GetWindowText(editbox, buff, 256);
-
-	strcpy_s(m_myRecentlySentMsg, 256, buff);
 	
 	Packet packet(PacketTypeMsg);
+	packet.write(&m_initStoneColor, sizeof(m_initStoneColor));
 	packet.write(buff, strlen(buff));
 
 	Packet::send(m_socket, packet);
@@ -226,31 +222,26 @@ void NetworkManager::printMessageOnMyList(Packet& packet)
 {
 	char* buffer = new char[256];
 	memset(buffer, 0, 256);
+	
+	int stoneColor = 0;
 
+	packet.read(&stoneColor, sizeof(stoneColor));
 	packet.read(buffer, strlen(buffer));
+	
 	Drawing &draw = m_gameManagerRef->getDrawing();
-	HWND list = draw.getListbox();
+	HWND &list = draw.getListbox();
 
-	if (strcmp(buffer, m_myRecentlySentMsg) == 0)
-	{
-		Drawing draw = m_gameManagerRef->getDrawing();
-		HWND list = draw.getListbox();
-		
+	if (stoneColor == m_initStoneColor)
+	{	
 		//char* nick = "me: ";
 		//strcat(nick, buffer);
 		
 		SetWindowText(list, buffer);
-		
-		m_myRecentlySentMsg = "";
 	}
 	else
 	{
-		Drawing draw = m_gameManagerRef->getDrawing();
-		HWND list = draw.getListbox();
-
 		//char* nick = "opponent: ";
 		//strcat(nick, buffer);
-
 		SetWindowText(list, buffer);
 	}
 	delete[] buffer;

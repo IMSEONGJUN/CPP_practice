@@ -34,7 +34,7 @@ void Drawing::initializeButton(HWND hWnd, HINSTANCE hInst)
 		800, 200, 100, 30, hWnd,
 		(HMENU)ID_BUTTON_DISCONNECT, hInst, NULL);
 
-	m_hWndList = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL,
+	m_hWndListBox = CreateWindowEx(WS_EX_CLIENTEDGE, "LISTBOX", NULL,
 		WS_CHILD | WS_VISIBLE | ES_AUTOVSCROLL,
 		800, 250, 250, 150, hWnd, (HMENU)ID_LIST, NULL, NULL);
 
@@ -48,12 +48,12 @@ void Drawing::initializeButton(HWND hWnd, HINSTANCE hInst)
 		(HMENU)ID_BUTTON_SENDMSG, hInst, NULL);
 }
 
-HWND Drawing::getListbox() const
+HWND& Drawing::getListbox()
 {
-	return m_hWndList;
+	return m_hWndListBox;
 }
 
-HWND Drawing::getEditbox() const
+HWND& Drawing::getEditbox()
 {
 	return m_hWndEditBox;
 }

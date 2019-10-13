@@ -19,13 +19,13 @@ public:
 	void drawStone2(HDC hdc, int x, int y, int color, int xInterval, int yInterval);
 
 	void initializeButton(HWND hWnd, HINSTANCE hInst);
-	HWND getListbox() const;
-	HWND getEditbox() const;
+	HWND& getListbox();
+	HWND& getEditbox();
 
 private:
 
 	HWND m_hwndReturn;
 	HWND m_hwndConnect;
-	HWND m_hWndList;
+	HWND m_hWndListBox;
 	HWND m_hWndEditBox;
 };
