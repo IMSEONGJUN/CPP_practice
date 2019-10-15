@@ -81,7 +81,8 @@ void NetworkManager::sendMessage()
 	Drawing &draw = m_gameManagerRef->getDrawing();
 	HWND &editbox = draw.getEditbox();
 	
-	char *buff = new char[256];
+	char buff[256];
+	memset(buff, 0, 256);
 	GetWindowText(editbox, buff, 256);
 	
 	Packet packet(PacketTypeMsg);
@@ -89,7 +90,6 @@ void NetworkManager::sendMessage()
 	packet.write(buff, strlen(buff));
 
 	Packet::send(m_socket, packet);
-	delete[] buff;
 }
 
 void NetworkManager::onSocketMessage(WPARAM wParam, LPARAM lParam)
@@ -220,7 +220,7 @@ void NetworkManager::onDeleteMsgRecv(Packet& packet)
 
 void NetworkManager::printMessageOnMyList(Packet& packet)
 {
-	char* buffer = new char[256];
+	char buffer[256];
 	memset(buffer, 0, 256);
 	
 	int stoneColor = 0;
@@ -233,16 +233,17 @@ void NetworkManager::printMessageOnMyList(Packet& packet)
 
 	if (stoneColor == m_initStoneColor)
 	{	
-		//char* nick = "me: ";
-		//strcat(nick, buffer);
+		char nick[256] = "me: ";
+		strcat_s(nick, sizeof(nick), buffer);
 		
-		SetWindowText(list, buffer);
+		SetWindowText(list, nick);
 	}
 	else
 	{
-		//char* nick = "opponent: ";
-		//strcat(nick, buffer);
-		SetWindowText(list, buffer);
+		char nick[256] = "opponent: ";
+		strcat_s(nick, sizeof(nick), buffer);
+		
+		SetWindowText(list, nick);
 	}
-	delete[] buffer;
+	
 }
