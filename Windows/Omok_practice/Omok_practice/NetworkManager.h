@@ -18,6 +18,7 @@ public:
 	void disconnect();
 	void setMyTurn(bool myTurn);
 	bool isMyTurn() const;
+
 	void sendStoneIndex(int x, int y, int color);
 	void sendMessage();
 

@@ -19,8 +19,8 @@ public:
 	void drawStone2(HDC hdc, int x, int y, int color, int xInterval, int yInterval);
 
 	void initializeButton(HWND hWnd, HINSTANCE hInst);
-	HWND& getListbox();
-	HWND& getEditbox();
+	HWND getListbox();
+	HWND getEditbox();
 
 private:
 

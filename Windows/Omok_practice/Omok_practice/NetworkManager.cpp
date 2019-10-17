@@ -79,7 +79,7 @@ void NetworkManager::sendStoneIndex(int x, int y, int color)
 void NetworkManager::sendMessage()
 {
 	Drawing &draw = m_gameManagerRef->getDrawing();
-	HWND &editbox = draw.getEditbox();
+	HWND editbox = draw.getEditbox();
 	
 	char buff[256];
 	memset(buff, 0, 256);
@@ -87,7 +87,16 @@ void NetworkManager::sendMessage()
 	
 	Packet packet(PacketTypeMsg);
 	packet.write(&m_initStoneColor, sizeof(m_initStoneColor));
+	int msgSize = strlen(buff);
+	packet.write(&msgSize, sizeof(msgSize));
 	packet.write(buff, strlen(buff));
+
+	/*--------
+	stoneColor (4byte)
+	bufferSize
+	buff †v¿ë
+
+	--------*/
 
 	Packet::send(m_socket, packet);
 }
@@ -147,7 +156,7 @@ void NetworkManager::onPacketRead(SOCKET socket)
 	{
 		MessageBox(m_hWnd, "no stones", "Message", MB_OK);
 	}
-	else if (PacketTypeMsg)
+	else if (type == PacketTypeMsg)
 	{
 		printMessageOnMyList(packet);
 	}
@@ -209,7 +218,7 @@ void NetworkManager::onDeleteMsgRecv(Packet& packet)
 {
 	int deleteIndex;
 	packet.read(&deleteIndex, sizeof(deleteIndex));
-	
+
 	Stone* temp = m_gameManagerRef->getGridFromMemory();
 	temp[deleteIndex].x = 0;
 	temp[deleteIndex].y = 0;
@@ -222,28 +231,32 @@ void NetworkManager::printMessageOnMyList(Packet& packet)
 {
 	char buffer[256];
 	memset(buffer, 0, 256);
-	
+
 	int stoneColor = 0;
+	int msgSize = 0;
 
 	packet.read(&stoneColor, sizeof(stoneColor));
-	packet.read(buffer, strlen(buffer));
+	packet.read(&msgSize, sizeof(msgSize));
+	packet.read(buffer, msgSize);
 	
 	Drawing &draw = m_gameManagerRef->getDrawing();
-	HWND &list = draw.getListbox();
+	HWND list = draw.getListbox();
 
 	if (stoneColor == m_initStoneColor)
 	{	
-		char nick[256] = "me: ";
-		strcat_s(nick, sizeof(nick), buffer);
+		std::string str = "me: ";
+		str += buffer;
 		
-		SetWindowText(list, nick);
+		//SetWindowText(list,str.c_str());
+		SendMessage(list, LB_ADDSTRING, NULL, (LPARAM)str.c_str() );
 	}
 	else
 	{
-		char nick[256] = "opponent: ";
-		strcat_s(nick, sizeof(nick), buffer);
-		
-		SetWindowText(list, nick);
+		std::string str = "opponent: ";
+		str += buffer;
+
+		//SetWindowText(list, str.c_str());
+		SendMessage(list, LB_ADDSTRING, NULL, (LPARAM)str.c_str());
 	}
 	
 }

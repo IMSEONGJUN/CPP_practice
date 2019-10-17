@@ -48,12 +48,12 @@ void Drawing::initializeButton(HWND hWnd, HINSTANCE hInst)
 		(HMENU)ID_BUTTON_SENDMSG, hInst, NULL);
 }
 
-HWND& Drawing::getListbox()
+HWND Drawing::getListbox()
 {
 	return m_hWndListBox;
 }
 
-HWND& Drawing::getEditbox()
+HWND Drawing::getEditbox()
 {
 	return m_hWndEditBox;
 }
