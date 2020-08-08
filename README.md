@@ -1,4 +1,4 @@
 # Practice C++
 
-## My First Project
+> **My First Project**
 ## Omok Game using Socket with TCP Protocol
